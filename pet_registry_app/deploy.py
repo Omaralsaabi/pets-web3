@@ -52,9 +52,11 @@ bytecode = compiled_sol["contracts"]["PetRegistry.sol"]["PetRegistry"]["evm"][
 abi = compiled_sol["contracts"]["PetRegistry.sol"]["PetRegistry"]["abi"]
 
 # For connecting to seplolia testnet
-infura_url = "https://sepolia.infura.io/v3/4227969b548343b68b6d3b8c347aad3f"
+# infura_url = "https://sepolia.infura.io/v3/4227969b548343b68b6d3b8c347aad3f" # testnet
+infura_url = "https://mainnet.infura.io/v3/4227969b548343b68b6d3b8c347aad3f"  # mainnet
 w3 = Web3(Web3.HTTPProvider(infura_url))
-chain_id = 11155111
+# chain_id = 11155111 # testnet
+chain_id = 1  # mainnet
 my_address = "0x785E91f9E091b3D68C17Fea185E71135d6C0D438"
 private_key = os.getenv("PRIVATE_KEY")
 nonce = w3.eth.get_transaction_count(my_address)
@@ -70,6 +72,7 @@ def deploy_contract():
             "from": my_address,
             "nonce": nonce,
             "chainId": chain_id,
+            "gasPrice": w3.to_wei(13, "gwei"),
         }
     )
     signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)

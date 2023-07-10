@@ -20,11 +20,13 @@ from .models import ContractAddress
 def add_pet(request):
     pet_data = request.data
 
-    if ContractAddress.objects.first():
-        contract_address = ContractAddress.objects.first().contract_address
+    if ContractAddress.objects.last():
+        contract_address = ContractAddress.objects.last().contract_address
     else:
         contract_address = deploy_contract()
         ContractAddress.objects.create(contract_address=contract_address)
+
+    print(contract_address)
 
     contract = w3.eth.contract(address=contract_address, abi=abi)
     nonce = w3.eth.get_transaction_count(my_address)
@@ -59,10 +61,12 @@ def add_pet(request):
 
 @api_view(["GET"])
 def get_pet(request, pet_id):
-    if ContractAddress.objects.first():
-        contract_address = ContractAddress.objects.first().contract_address
+    if ContractAddress.objects.last():
+        contract_address = ContractAddress.objects.last().contract_address
     else:
         return Response({"message": "Contract does not exist"})
+
+    print(contract_address)
 
     contract = w3.eth.contract(address=contract_address, abi=abi)
 
